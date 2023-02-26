@@ -1,0 +1,43 @@
+* {
+    font-family: "Montserrat", "sans-serif";
+}
+
+body {
+    background-color: whitesmoke;
+}
+
+a {
+    color: rgb(22, 199, 199);
+}
+
+a:hover {
+    color: rgb(214, 214, 82);
+}
+
+.btn:hover {
+    border: 1px solid green;
+}
+
+#finalScore {
+    font-weight: bold;
+}
+
+#questionDiv,
+#summary {
+    width: 50%;
+    margin: 1px auto;
+    text-align: left;
+}
+
+#questionTitle {
+    font-size: 25px;
+}
+
+#answerCheck {
+    font-style: italic;
+}
+
+#lineBreak {
+    border: 2px solid gray;
+    width: 100%;
+}
