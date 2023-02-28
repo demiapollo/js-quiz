@@ -148,7 +148,62 @@ function gameOver() {
     finalScore.textContent = correctAns;
 }
 
-//line 216 local storage da kaldim
+//local storage of high scores
+function saveScores(event) {
+    event.preventDefault();
+    if (initialInput.value === '') {
+        alert('Please submit your initials.');
+        return;
+    }
+
+    start.style.display = "none";
+    summary.style.display = "block";
+    timer.style.display = "block";
+    questionDiv.style.display = "none";
+    timesUp.style.display = "none";
+    highScoresSection.style.display = 'block';
+
+    let saveHighScores = localStorage.getItem("High Scores");
+    let scoresArray;
+
+    if (saveHighScores === null) {
+        scoresArray = [];
+    } else {
+        scoresArray = JSON.parse(saveHighScores);
+    }
+
+    let user_n_Score = {
+        inititals: initialInput.value,
+        score: finalScore.textContent 
+    };
+
+    console.log(user_n_Score);
+    scoresArray.push(user_n_Score);
+
+    showHighScores();
+}
+
+// let i = 0 
+function showHighScores() {
+    start.style.display = "none";
+    summary.style.display = "block";
+    timer.style.display = "block";
+    questionDiv.style.display = "none";
+    timesUp.style.display = "none";
+    highScoresSection.style.display = 'block';
+
+    if (saveHighScores === null) {
+        return;
+    } 
+
+    let storedHighScores = JSON.parse(saveHighScores);
+    for (i=0, i < storedHighScores.length; i++;) {
+        let newHighScore = document.createElement('p');
+        newHighScore.innerHTML = storedHighScores[i].inititals + storedHighScores[i].score;
+        listOfHighScores.appendChild(newHighScore);
+
+    }
+}
 
 //Event listeners
 startQuizButton.addEventListener("click", newQuiz);
@@ -157,3 +212,12 @@ choiceB.addEventListener("click", chooseB);
 choiceC.addEventListener("click", chooseC);
 choiceD.addEventListener("click", chooseD);
 
+submitInitialButton.addEventListener("click", function(event){storedHighScores(event)});
+highscores.addEventListener("click", function(event){showHighScores(event)});
+
+goBackButton.addEventListener("click", function(){
+    start.style.display = "block";
+    highScoresSection.style.display = "none"; 
+})
+
+clearHighScoresButton.addEventListener("click", function(){window.localStorage.removeItem("High Scores");})
