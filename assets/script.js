@@ -28,35 +28,48 @@ const questions = [
 ];
 
 //Create variables with const by connecting to corresponding html elements
-const timer = document.querySelector("#timer");
-const timeLeft = document.querySelector("#timeLeft");
-const timesUp = document.querySelector("#timesUp");
+//Use jQuery to re-write variables
+const timer = $('#timer');
+//document.querySelector("#timer");
+const timeLeft = $('#timeLeft');
+//document.querySelector("#timeLeft");
+const timesUp = $('#timesUp');
+//document.querySelector("#timesUp");
+const mainArea = $('#mainArea');
+//document.querySelector("#mainArea");
 
-const mainArea = document.querySelector("#mainArea");
+const start = $('#start');
+//document.querySelector("#start");
+const startQuizButton = $('#startQuizButton');
+//document.querySelector("#startQuizButton");
 
-const start = document.querySelector("#start");
-const startQuizButton = document.querySelector("#startQuizButton");
+const questionDiv = $('#questionDiv');
+//document.querySelector("#questionDiv");
+const questionTitle = $('#questionTitle');
+//document.querySelector("#questionTitle");
+const choiceA = $('#btn-0');
+//document.querySelector("#btn-0");
+const choiceB = $('#btn-1');
+//document.querySelector("#btn-1");
+const choiceC = $('#btn-2');
+//document.querySelector("#btn-2");
+const choiceD = $('#btn-3');
+//document.querySelector("#btn-3");
+const answerCheck = $('#answerCheck');
+//document.querySelector("#answerCheck");
 
-const questionDiv = document.querySelector("#questionDiv");
-const questionTitle = document.querySelector("#questionTitle");
-const choiceA = document.querySelector("#btn-0");
-const choiceB = document.querySelector("#btn-1");
-const choiceC = document.querySelector("#btn-2");
-const choiceD = document.querySelector("#btn-3");
-const answerCheck = document.querySelector("#answerCheck");
+const summary = $("#summary");
+const initialInput = $("#initialInput");
+const submitInitialButton = $("#submitInitialButton");
 
-const summary = document.querySelector("#summary");
-const initialInput = document.querySelector("#initialInput");
-const submitInitialButton = document.querySelector("#submitInitialButton");
+const finalScore = $("#finalScore");
+const highScoresSection = $("#highScoresSection");
 
-const finalScore = document.querySelector("#finalScore");
-const highScoresSection = document.querySelector("#highScoresSection");
+const goBackButton = $("#goBackButton");
+const clearHighScoresButton = $("#clearHighScoresButton");
 
-const goBackButton = document.querySelector("#goBackButton");
-const clearHighScoresButton = document.querySelector("#clearHighScoresButton");
-
-const listOfHighScores = document.querySelector("#listOfHighScores");
-const highscores = document.querySelector("#highscores");
+const listOfHighScores = $("#listOfHighScores");
+const highscores = $("#highscores");
 
 //other variables needed
 let correctAns = 0;
@@ -71,10 +84,14 @@ function newQuiz() {
     timeLeft.textContent = totalTime;
     initialInput.textContent = "";
 
-    start.style.display = "none";
-    questionDiv.style.display = "block";
-    timer.style.display = "block";
-    timesUp.style.display = "none";
+    start.hide();
+    questionDiv.show();
+    timer.show();
+    timesUp.hide();
+    // start.style.display = "none";
+    // questionDiv.style.display = "block";
+    // timer.style.display = "block";
+    // timesUp.style.display = "none";
 
     let startTimer = setInterval (function() {
         totalTime--;
@@ -95,11 +112,12 @@ function showQuiz () {
 }
 
 function nextQuestion() {
-    questionTitle.textContent = questions[questionIndex].question;
-    choiceA.textContent = questions[questionIndex].choices[0];
-    choiceB.textContent = questions[questionIndex].choices[1];
-    choiceC.textContent = questions[questionIndex].choices[2];
-    choiceD.textContent = questions[questionIndex].choices[3];
+    //.textContent is replaced with .text() & place content inside ()
+    questionTitle.text(questions[questionIndex].question);
+    choiceA.text(questions[questionIndex].choices[0]);
+    choiceB.text(questions[questionIndex].choices[1]);
+    choiceC.text(questions[questionIndex].choices[2]);
+    choiceD.text(questions[questionIndex].choices[3]);
 }
 
 //To check if the question logs with answer choices
@@ -110,18 +128,18 @@ function nextQuestion() {
 //answer is what the user chooses
 
 function checkAnswer (answer) {
-    const lineBreak = document.querySelector("#lineBreak");
-    lineBreak.style.display = "block";
-    answerCheck.style.display = "block";
+    const lineBreak = $("#lineBreak");
+    lineBreak.show()
+    answerCheck.show()
     //correct answer
     if (questions[questionIndex].answer === questions[questionIndex].choices[answer]) {
     correctAns++;
-    answerCheck.textContent = "Correct";
+    answerCheck.text("Correct");
     //wrong answer
     } else {
     totalTime--;
     totalTime -= 10;
-    answerCheck.textContent = "Wrong";
+    answerCheck.text("Wrong");
     }
     //same process for next questions
     questionIndex++;
@@ -139,16 +157,23 @@ function chooseD() {checkAnswer(4);}
 
 //game over function - no time left or all questions are answered
 function gameOver() {
-    summary.style.display = "block";
-    questionDiv.style.display = "none";
-    start.style.display = "none";
-    timer.style.display = "none";
-    timesUp.style.display = "block";
+    
+    summary.show();
+    questionDiv.hide();
+    start.hide();
+    timer.hide();
+    timesUp.show();
+    // summary.style.display = "block";
+    // questionDiv.style.display = "none";
+    // start.style.display = "none";
+    // timer.style.display = "none";
+    // timesUp.style.display = "block";
 
-    finalScore.textContent = correctAns;
+    finalScore.text(correctAns);
 }
 
 //local storage of high scores
+//local storage does not work
 function saveScores(event) {
     event.preventDefault();
     if (initialInput.value === '') {
@@ -192,6 +217,8 @@ function showHighScores() {
     timesUp.style.display = "none";
     highScoresSection.style.display = 'block';
 
+    let saveHighScores = localStorage.getItem("High Scores");
+
     if (saveHighScores === null) {
         return;
     } 
@@ -205,19 +232,25 @@ function showHighScores() {
     }
 }
 
+//It does not scope storedHighScores in the event listeners?
+//Can I fix it by repeating it outside the showHighScores
+
 //Event listeners
-startQuizButton.addEventListener("click", newQuiz);
-choiceA.addEventListener("click", chooseA);
-choiceB.addEventListener("click", chooseB);
-choiceC.addEventListener("click", chooseC);
-choiceD.addEventListener("click", chooseD);
+//Can I make this happen with a single event listener?
+//addEventListener is replaced with on
+startQuizButton.on("click", newQuiz);
 
-submitInitialButton.addEventListener("click", function(event){storedHighScores(event)});
-highscores.addEventListener("click", function(event){showHighScores(event)});
+choiceA.on("click", chooseA);
+choiceB.on("click", chooseB);
+choiceC.on("click", chooseC);
+choiceD.on("click", chooseD);
 
-goBackButton.addEventListener("click", function(){
+submitInitialButton.on("click", function(event){showHighScores(event)});
+highscores.on("click", function(event){showHighScores(event)});
+
+goBackButton.on("click", function(){
     start.style.display = "block";
     highScoresSection.style.display = "none"; 
 })
 
-clearHighScoresButton.addEventListener("click", function(){window.localStorage.removeItem("High Scores");})
+clearHighScoresButton.on("click", function(){window.localStorage.removeItem("High Scores");})
