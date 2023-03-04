@@ -30,33 +30,20 @@ const questions = [
 //Create variables with const by connecting to corresponding html elements
 //Use jQuery to re-write variables
 const timer = $('#timer');
-//document.querySelector("#timer");
 const timeLeft = $('#timeLeft');
-//document.querySelector("#timeLeft");
 const timesUp = $('#timesUp');
-//document.querySelector("#timesUp");
 const mainArea = $('#mainArea');
-//document.querySelector("#mainArea");
 
 const start = $('#start');
-//document.querySelector("#start");
 const startQuizButton = $('#startQuizButton');
-//document.querySelector("#startQuizButton");
 
 const questionDiv = $('#questionDiv');
-//document.querySelector("#questionDiv");
 const questionTitle = $('#questionTitle');
-//document.querySelector("#questionTitle");
 const choiceA = $('#btn-0');
-//document.querySelector("#btn-0");
 const choiceB = $('#btn-1');
-//document.querySelector("#btn-1");
 const choiceC = $('#btn-2');
-//document.querySelector("#btn-2");
 const choiceD = $('#btn-3');
-//document.querySelector("#btn-3");
 const answerCheck = $('#answerCheck');
-//document.querySelector("#answerCheck");
 
 const summary = $("#summary");
 const initialInput = $("#initialInput");
@@ -81,21 +68,18 @@ let scoreResult = 0;
 let totalTime = 100;
 
 function newQuiz() {
-    timeLeft.textContent = totalTime;
-    initialInput.textContent = "";
+    timeLeft.text(totalTime);
+    initialInput.text('');
 
     start.hide();
     questionDiv.show();
     timer.show();
     timesUp.hide();
-    // start.style.display = "none";
-    // questionDiv.style.display = "block";
-    // timer.style.display = "block";
-    // timesUp.style.display = "none";
+    summary.hide();
 
     let startTimer = setInterval (function() {
         totalTime--;
-        timeLeft.textContent = totalTime;
+        timeLeft.text(totalTime);
         if(totalTime <= 0) {
             clearInterval(startTimer);
             if(questionIndex < questions.length - 1) {
@@ -120,9 +104,6 @@ function nextQuestion() {
     choiceD.text(questions[questionIndex].choices[3]);
 }
 
-//To check if the question logs with answer choices
-// console.log(questions[questionIndex].question);
-// console.log(questions[questionIndex].choices);
 
 //enable choosing answer choices for each question & checking correct answer
 //answer is what the user chooses
@@ -135,12 +116,14 @@ function checkAnswer (answer) {
     if (questions[questionIndex].answer === questions[questionIndex].choices[answer]) {
     correctAns++;
     answerCheck.text("Correct");
+    
     //wrong answer
     } else {
     totalTime--;
     totalTime -= 10;
     answerCheck.text("Wrong");
     }
+
     //same process for next questions
     questionIndex++;
     if (questionIndex < questions.length) {
@@ -163,70 +146,75 @@ function gameOver() {
     start.hide();
     timer.hide();
     timesUp.show();
-    // summary.style.display = "block";
-    // questionDiv.style.display = "none";
-    // start.style.display = "none";
-    // timer.style.display = "none";
-    // timesUp.style.display = "block";
-
+   
     finalScore.text(correctAns);
+    console.log(finalScore, "to check final score");
 }
 
+let saveHighScores = localStorage.getItem("High Scores", JSON.stringify());
 //local storage of high scores
 //local storage does not work
+//function storeHighScores(event) {
+
 function saveScores(event) {
     event.preventDefault();
-    if (initialInput.value === '') {
+    if (initialInput.val() === '') {
         alert('Please submit your initials.');
         return;
     }
 
-    start.style.display = "none";
-    summary.style.display = "block";
-    timer.style.display = "block";
-    questionDiv.style.display = "none";
-    timesUp.style.display = "none";
-    highScoresSection.style.display = 'block';
+    start.hide();
+    summary.show();
+    timer.show();
+    questionDiv.hide();
+    timesUp.hide();
+    highScoresSection.show();
 
-    let saveHighScores = localStorage.getItem("High Scores");
+
+    //get() or getItem()
+    
+   
     let scoresArray;
 
     if (saveHighScores === null) {
         scoresArray = [];
     } else {
-        scoresArray = JSON.parse(saveHighScores);
+        scoresArray = JSON.parse(localStorage.getItem('high scores'));
     }
 
     let user_n_Score = {
-        inititals: initialInput.value,
-        score: finalScore.textContent 
+        inititals: initialInput.val(),
+        score: finalScore.text(correctAns) 
     };
 
-    console.log(user_n_Score);
+    
     scoresArray.push(user_n_Score);
+    // console.log('highScoreObject ',scoresArray);
+
+
+    let scoresArrayString = JSON.stringify(scoresArray);
+    window.localStorage.setItem('high scores', scoresArrayString);
+
 
     showHighScores();
 }
 
-// let i = 0 
+let i = 0 
 function showHighScores() {
-    start.style.display = "none";
-    summary.style.display = "block";
-    timer.style.display = "block";
-    questionDiv.style.display = "none";
-    timesUp.style.display = "none";
-    highScoresSection.style.display = 'block';
+    
+    start.hide();
+    summary.show();
+    timer.show();
+    questionDiv.hide();
+    timesUp.hide();
+    highScoresSection.show();
 
-    let saveHighScores = localStorage.getItem("High Scores");
-
-    if (saveHighScores === null) {
-        return;
-    } 
+    let saveHighScores = localStorage.getItem("high scores", scoresArray);
 
     let storedHighScores = JSON.parse(saveHighScores);
     for (i=0, i < storedHighScores.length; i++;) {
-        let newHighScore = document.createElement('p');
-        newHighScore.innerHTML = storedHighScores[i].inititals + storedHighScores[i].score;
+        let newHighScore = $('<div>');
+        newHighScore.html = storedHighScores[i].inititals + storedHighScores[i].score;
         listOfHighScores.appendChild(newHighScore);
 
     }
@@ -249,8 +237,9 @@ submitInitialButton.on("click", function(event){showHighScores(event)});
 highscores.on("click", function(event){showHighScores(event)});
 
 goBackButton.on("click", function(){
-    start.style.display = "block";
-    highScoresSection.style.display = "none"; 
+    
+    start.show();
+    highScoresSection.hide();
 })
 
-clearHighScoresButton.on("click", function(){window.localStorage.removeItem("High Scores");})
+clearHighScoresButton.on("click", function(){window.localStorage.remove("high scores");})
