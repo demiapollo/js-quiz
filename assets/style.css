@@ -41,3 +41,8 @@ a:hover {
     border: 2px solid gray;
     width: 100%;
 }
+
+.resultDiv {
+    display: flex;
+    justify-content: space-evenly;
+}

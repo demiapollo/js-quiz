@@ -27,8 +27,7 @@ const questions = [
     }
 ];
 
-//Create variables with const by connecting to corresponding html elements
-//Use jQuery to re-write variables
+//Create variables with const by connecting to corresponding html elements - Use jQuery 
 const timer = $('#timer');
 const timeLeft = $('#timeLeft');
 const timesUp = $('#timesUp');
@@ -104,9 +103,7 @@ function nextQuestion() {
     choiceD.text(questions[questionIndex].choices[3]);
 }
 
-
 //enable choosing answer choices for each question & checking correct answer
-//answer is what the user chooses
 
 function checkAnswer (answer) {
     const lineBreak = $("#lineBreak");
@@ -148,14 +145,11 @@ function gameOver() {
     timesUp.show();
    
     finalScore.text(correctAns);
-    console.log(finalScore, "to check final score");
 }
 
-let saveHighScores = localStorage.getItem("High Scores", JSON.stringify());
-//local storage of high scores
-//local storage does not work
-//function storeHighScores(event) {
+let saveHighScores = JSON.parse(localStorage.getItem("HighScores")) || [];
 
+//local storage of high scores 
 function saveScores(event) {
     event.preventDefault();
     if (initialInput.val() === '') {
@@ -170,31 +164,16 @@ function saveScores(event) {
     timesUp.hide();
     highScoresSection.show();
 
-
-    //get() or getItem()
-    
-   
-    let scoresArray;
-
-    if (saveHighScores === null) {
-        scoresArray = [];
-    } else {
-        scoresArray = JSON.parse(localStorage.getItem('high scores'));
-    }
-
     let user_n_Score = {
         inititals: initialInput.val(),
-        score: finalScore.text(correctAns) 
+        score: correctAns
     };
-
+    console.log(user_n_Score);
     
-    scoresArray.push(user_n_Score);
-    // console.log('highScoreObject ',scoresArray);
-
-
-    let scoresArrayString = JSON.stringify(scoresArray);
-    window.localStorage.setItem('high scores', scoresArrayString);
-
+    saveHighScores.push(user_n_Score);
+   
+    // let scoresArrayString = JSON.stringify(scoresArray);
+    window.localStorage.setItem('HighScores', JSON.stringify(saveHighScores));
 
     showHighScores();
 }
@@ -209,23 +188,17 @@ function showHighScores() {
     timesUp.hide();
     highScoresSection.show();
 
-    let saveHighScores = localStorage.getItem("high scores", scoresArray);
-
-    let storedHighScores = JSON.parse(saveHighScores);
-    for (i=0, i < storedHighScores.length; i++;) {
+    if (saveHighScores.length > 0) {
+    for (let i=0; i < saveHighScores.length; i++) {
         let newHighScore = $('<div>');
-        newHighScore.html = storedHighScores[i].inititals + storedHighScores[i].score;
-        listOfHighScores.appendChild(newHighScore);
-
+        newHighScore.html(`${saveHighScores[i].inititals} ${saveHighScores[i].score}`);
+        listOfHighScores.prepend(newHighScore);
     }
 }
-
-//It does not scope storedHighScores in the event listeners?
-//Can I fix it by repeating it outside the showHighScores
+}
 
 //Event listeners
 //Can I make this happen with a single event listener?
-//addEventListener is replaced with on
 startQuizButton.on("click", newQuiz);
 
 choiceA.on("click", chooseA);
@@ -233,8 +206,8 @@ choiceB.on("click", chooseB);
 choiceC.on("click", chooseC);
 choiceD.on("click", chooseD);
 
-submitInitialButton.on("click", function(event){showHighScores(event)});
-highscores.on("click", function(event){showHighScores(event)});
+submitInitialButton.on("click", saveScores);
+highscores.on("click", showHighScores);
 
 goBackButton.on("click", function(){
     
@@ -242,4 +215,4 @@ goBackButton.on("click", function(){
     highScoresSection.hide();
 })
 
-clearHighScoresButton.on("click", function(){window.localStorage.remove("high scores");})
+clearHighScoresButton.on("click", function(){window.localStorage.remove("HighScores");})
