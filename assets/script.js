@@ -52,7 +52,8 @@ const finalScore = $("#finalScore");
 const highScoresSection = $("#highScoresSection");
 
 const goBackButton = $("#goBackButton");
-const clearHighScoresButton = $("#clearHighScoresButton");
+const clearHighScoresButton = document.querySelector('#clearHighScoresButton');
+//$("#clearHighScoresButton");
 
 const listOfHighScores = $("#listOfHighScores");
 const highscores = $("#highscores");
@@ -170,7 +171,9 @@ function saveScores(event) {
     };
     console.log(user_n_Score);
     
+    
     saveHighScores.push(user_n_Score);
+    // console.log(saveHighScores, 'to see what is saved');
    
     // let scoresArrayString = JSON.stringify(scoresArray);
     window.localStorage.setItem('HighScores', JSON.stringify(saveHighScores));
@@ -182,13 +185,14 @@ let i = 0
 function showHighScores() {
     
     start.hide();
-    summary.show();
+    summary.hide();
     timer.show();
     questionDiv.hide();
     timesUp.hide();
     highScoresSection.show();
 
     if (saveHighScores.length > 0) {
+        // console.log(saveHighScores.length, 'initials & recorded scores');
     for (let i=0; i < saveHighScores.length; i++) {
         let newHighScore = $('<div>');
         newHighScore.html(`${saveHighScores[i].inititals} ${saveHighScores[i].score}`);
@@ -213,6 +217,12 @@ goBackButton.on("click", function(){
     
     start.show();
     highScoresSection.hide();
+    listOfHighScores.empty();
 })
 
-clearHighScoresButton.on("click", function(){window.localStorage.remove("HighScores");})
+//clear high scores btn does not work
+//start quiz after clicking back does not work
+// clearHighScoresButton.on("click", ); //clear btn still does not work
+clearHighScoresButton.addEventListener("click", function () {
+    localStorage.removeItem('HighScores');
+});
