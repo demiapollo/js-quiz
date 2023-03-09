@@ -108,12 +108,14 @@ function nextQuestion() {
 
 //enable choosing answer choices for each question & checking correct answer
 
-function checkAnswer (answer) {
+function checkAnswer () {
+    let answer = $(this).text()
+    console.log(answer)
     const lineBreak = $("#lineBreak");
     lineBreak.show()
     answerCheck.show()
     //correct answer
-    if (questions[questionIndex].answer === questions[questionIndex].choices[answer]) {
+    if (questions[questionIndex].answer === answer) {
     correctAns++;
     answerCheck.text("Correct");
     
@@ -133,15 +135,7 @@ function checkAnswer (answer) {
     }
 }
 
-function chooseA() {checkAnswer(0);}
-function chooseB() {checkAnswer(1);}
-function chooseC() {checkAnswer(2);}
-function chooseD() {checkAnswer(3);}
 
-//game over function - no time left or all questions are answered
-//I need to reset question index and timer in the game over function
-//the score keeps adding up
-//time does not reset
 function gameOver() {
     
     summary.show();
@@ -150,13 +144,9 @@ function gameOver() {
     start.hide();
     timer.hide();
     timesUp.show();
-    clearInterval(startTimer); //this is probably not working.
+    clearInterval(startTimer);
    
     finalScore.text(correctAns);
-
-    //to reset timer & score?
-    //get rid of correct or wrong message
-    //it remembers the initials from the previous attempt
     
     questionNum = 0;
     questionIndex = 0;
@@ -219,19 +209,10 @@ function showHighScores() {
 
 startQuizButton.on("click", newQuiz);
 
-//Can I make this happen with a single event listener?
-choiceA.on("click", chooseA);
-choiceB.on("click", chooseB);
-choiceC.on("click", chooseC);
-choiceD.on("click", chooseD);
-
-//Delegate event listener to the parent element <div id=> & event & event.target
-//first element is the parent
-//second element is children
-//third element is the function
-// const allButtonsEl = $(".allButtons");
-// allButtonsEl.on("click", '.btn', function(event) {
-// })
+choiceA.on("click", checkAnswer);
+choiceB.on("click", checkAnswer);
+choiceC.on("click", checkAnswer);
+choiceD.on("click", checkAnswer);
 
 submitInitialButton.on("click", saveScores);
 highscores.on("click", showHighScores);
@@ -243,13 +224,6 @@ goBackButton.on("click", function(){
     listOfHighScores.empty();
 })
 
-//clear high scores btn does not work
-//start quiz after clicking back does not work
-
-// clearHighScoresButton.on("click", ); //clear btn still does not work
-// clearHighScoresButton.addEventListener("click", function () {
-//     localStorage.removeItem('HighScores');
-// });
 clearHighScoresButton.on("click", function () {
     localStorage.removeItem('HighScores');
     listOfHighScores.empty();
