@@ -42,7 +42,7 @@ const choiceA = $('#btn-0');
 const choiceB = $('#btn-1');
 const choiceC = $('#btn-2');
 const choiceD = $('#btn-3');
-const answerCheck = $('#answerCheck');
+const answerCheck = $('#answerCheck'); // reset in game over
 
 const summary = $("#summary");
 const initialInput = $("#initialInput");
@@ -52,7 +52,7 @@ const finalScore = $("#finalScore");
 const highScoresSection = $("#highScoresSection");
 
 const goBackButton = $("#goBackButton");
-const clearHighScoresButton = document.querySelector('#clearHighScoresButton');
+const clearHighScoresButton = $("#clearHighScoresButton"); //document.querySelector('#clearHighScoresButton');
 //$("#clearHighScoresButton");
 
 const listOfHighScores = $("#listOfHighScores");
@@ -62,29 +62,31 @@ const highscores = $("#highscores");
 let correctAns = 0;
 let questionNum = 0;
 let questionIndex = 0;
-let scoreResult = 0;
+// let scoreResult = 0;
 
 //functions to start timer after clicking start
 let totalTime = 100;
+let startTimer;
 
 function newQuiz() {
     timeLeft.text(totalTime);
     initialInput.text('');
-
+    totalTime = 100;
+    correctAns = 0;
     start.hide();
     questionDiv.show();
     timer.show();
     timesUp.hide();
     summary.hide();
 
-    let startTimer = setInterval (function() {
+    startTimer = setInterval (function() {
         totalTime--;
         timeLeft.text(totalTime);
         if(totalTime <= 0) {
-            clearInterval(startTimer);
-            if(questionIndex < questions.length - 1) {
+            // clearInterval(startTimer);
+            // if(questionIndex < questions.length - 1) {
                 gameOver();
-            }
+            // }
         }
     }, 1000);
     showQuiz();
@@ -134,18 +136,33 @@ function checkAnswer (answer) {
 function chooseA() {checkAnswer(0);}
 function chooseB() {checkAnswer(1);}
 function chooseC() {checkAnswer(2);}
-function chooseD() {checkAnswer(4);}
+function chooseD() {checkAnswer(3);}
 
 //game over function - no time left or all questions are answered
+//I need to reset question index and timer in the game over function
+//the score keeps adding up
+//time does not reset
 function gameOver() {
     
     summary.show();
+    totalTime = 100;
     questionDiv.hide();
     start.hide();
     timer.hide();
     timesUp.show();
+    clearInterval(startTimer); //this is probably not working.
    
     finalScore.text(correctAns);
+
+    //to reset timer & score?
+    //get rid of correct or wrong message
+    //it remembers the initials from the previous attempt
+    
+    questionNum = 0;
+    questionIndex = 0;
+    answerCheck.hide();
+    
+    // totalTime;
 }
 
 let saveHighScores = JSON.parse(localStorage.getItem("HighScores")) || [];
@@ -169,15 +186,13 @@ function saveScores(event) {
         inititals: initialInput.val(),
         score: correctAns
     };
+
     console.log(user_n_Score);
     
-    
     saveHighScores.push(user_n_Score);
-    // console.log(saveHighScores, 'to see what is saved');
    
-    // let scoresArrayString = JSON.stringify(scoresArray);
     window.localStorage.setItem('HighScores', JSON.stringify(saveHighScores));
-
+    initialInput.val("");
     showHighScores();
 }
 
@@ -192,7 +207,6 @@ function showHighScores() {
     highScoresSection.show();
 
     if (saveHighScores.length > 0) {
-        // console.log(saveHighScores.length, 'initials & recorded scores');
     for (let i=0; i < saveHighScores.length; i++) {
         let newHighScore = $('<div>');
         newHighScore.html(`${saveHighScores[i].inititals} ${saveHighScores[i].score}`);
@@ -202,13 +216,22 @@ function showHighScores() {
 }
 
 //Event listeners
-//Can I make this happen with a single event listener?
+
 startQuizButton.on("click", newQuiz);
 
+//Can I make this happen with a single event listener?
 choiceA.on("click", chooseA);
 choiceB.on("click", chooseB);
 choiceC.on("click", chooseC);
 choiceD.on("click", chooseD);
+
+//Delegate event listener to the parent element <div id=> & event & event.target
+//first element is the parent
+//second element is children
+//third element is the function
+// const allButtonsEl = $(".allButtons");
+// allButtonsEl.on("click", '.btn', function(event) {
+// })
 
 submitInitialButton.on("click", saveScores);
 highscores.on("click", showHighScores);
@@ -222,7 +245,13 @@ goBackButton.on("click", function(){
 
 //clear high scores btn does not work
 //start quiz after clicking back does not work
+
 // clearHighScoresButton.on("click", ); //clear btn still does not work
-clearHighScoresButton.addEventListener("click", function () {
+// clearHighScoresButton.addEventListener("click", function () {
+//     localStorage.removeItem('HighScores');
+// });
+clearHighScoresButton.on("click", function () {
     localStorage.removeItem('HighScores');
+    listOfHighScores.empty();
+    saveHighScores = [];    
 });
