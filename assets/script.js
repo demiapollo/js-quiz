@@ -42,7 +42,7 @@ const choiceA = $('#btn-0');
 const choiceB = $('#btn-1');
 const choiceC = $('#btn-2');
 const choiceD = $('#btn-3');
-const answerCheck = $('#answerCheck'); // reset in game over
+const answerCheck = $('#answerCheck'); 
 
 const summary = $("#summary");
 const initialInput = $("#initialInput");
@@ -52,8 +52,7 @@ const finalScore = $("#finalScore");
 const highScoresSection = $("#highScoresSection");
 
 const goBackButton = $("#goBackButton");
-const clearHighScoresButton = $("#clearHighScoresButton"); //document.querySelector('#clearHighScoresButton');
-//$("#clearHighScoresButton");
+const clearHighScoresButton = $("#clearHighScoresButton");
 
 const listOfHighScores = $("#listOfHighScores");
 const highscores = $("#highscores");
@@ -62,7 +61,6 @@ const highscores = $("#highscores");
 let correctAns = 0;
 let questionNum = 0;
 let questionIndex = 0;
-// let scoreResult = 0;
 
 //functions to start timer after clicking start
 let totalTime = 100;
@@ -83,10 +81,8 @@ function newQuiz() {
         totalTime--;
         timeLeft.text(totalTime);
         if(totalTime <= 0) {
-            // clearInterval(startTimer);
-            // if(questionIndex < questions.length - 1) {
+            
                 gameOver();
-            // }
         }
     }, 1000);
     showQuiz();
