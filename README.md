@@ -5,8 +5,10 @@ There are five questions.
 The time limit is 100 seconds.
 There is a 10 second penalty for wrong answers.
 
-## The deployed site demo
+## The deployed site screenshot
 
-![](assets/js-quiz-demo.mov)
+![img] (./asset/Screenshot_quiz.png)
 
 ## The deployed site link
+
+https://demiapollo.github.io/js-quiz/
