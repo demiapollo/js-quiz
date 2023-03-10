@@ -7,6 +7,6 @@ There is a 10 second penalty for wrong answers.
 
 ## The deployed site demo
 
-![Alt Text](./assets/js-quiz-demo_AdobeExpress.gif)
+![](./assets/js-quiz-demo_AdobeExpress.gif)
 
 ## The deployed site link
