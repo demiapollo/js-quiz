@@ -7,7 +7,7 @@ There is a 10 second penalty for wrong answers.
 
 ## The deployed site screenshot
 
-![img] (./asset/Screenshot_quiz.png)
+![img](assets/Screenshot_quiz.png)
 
 ## The deployed site link
 
